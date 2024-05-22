@@ -27,13 +27,13 @@ export default function DisplayFacilities(){
     }, [])
 
     return (
-        <div className="grid grid-cols-4 gap-2 w-3/5 items-center rounded-lg">
-            {facilitiesFeed.map((item) => (
+        <div className="grid grid-cols-3 gap-2 w-full items-center rounded-lg">
+            {facilitiesFeed && facilitiesFeed.map((item) => (
                 <div key={item.facility_id} className="flex flex-col items-start bg-white p-4 rounded-lg h-full shadow-md hover:cursor-pointer hover:shadow-xl">
                     <img
                         src={item.facility_image_url}
                         alt={item.facility_name}
-                        className="object-cover w-full h-36 rounded-lg"
+                        className="object-cover w-full h-48 rounded-lg"
                     />
                     <h3 className="text-lg font-semibold">{item.facility_name}</h3>
                     <label>{item.facility_description}</label>

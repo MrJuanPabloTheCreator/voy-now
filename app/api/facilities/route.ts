@@ -27,8 +27,12 @@ export async function POST(req: NextRequest) {
     try {
         const formData = await req.json();
         const { facility, image_url } = formData;
-        const [newFacilityQuery] = await db.query(`INSERT INTO facilities (facility_name, facility_description, facility_image_url)
-        VALUES ('${facility.name}', '${facility.description}', '${image_url}');`);
+        const [newFacilityQuery] = await db.query(`
+        INSERT INTO facilities 
+            (facility_name, facility_description, facility_image_url, city, region, address, postal_code, geom) 
+        VALUES 
+            (?, ?, ?, ?, ?, ?, ?, ST_GeomFromText(CONCAT('POINT(', ?, ' ', ?, ')'), 4326));
+    `, [facility.name, facility.description, image_url, facility.city, facility.region, facility.address, facility.postalCode, facility.latitude,facility.longitude]);
 
         await connection.commit();
 

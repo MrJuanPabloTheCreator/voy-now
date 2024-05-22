@@ -8,12 +8,24 @@ import { getSignedURL } from "@/server/actions";
 interface Facility {
     name: string;
     description: string;
+    city: string;
+    region: string;
+    address: string;
+    postal_code?: number;
+    longitude?: number;
+    latitude?: number;
 }
 
 export default function ImageUpload(){
     const [facility, setFacility] = useState<Facility>({
         name: '',
         description: '',
+        city: '',
+        region: '',
+        address: '',
+        postal_code: undefined,
+        longitude: undefined,
+        latitude: undefined
     })
 
     const [file, setFile] = useState<File | null>(null);
@@ -93,15 +105,15 @@ export default function ImageUpload(){
     };
 
     return (
-        <div className="flex flex-col">
-            <form className="flex flex-col items-center space-y-2 p-4 bg-white/40 rounded-lg" onSubmit={handleSubmit}>
+        <div className="flex items-center justify-center p-10 bg-white/40 shadow-lg rounded-lg w-1/4 mb-10">
+            <form className="flex flex-col items-center space-y-5 font-semibold w-full" onSubmit={handleSubmit}>
                 <label className='flex space-x-2 w-full'>
                     <h3>Name:</h3>
                     <input 
                         type="text" 
                         value={facility.name} 
                         onChange={e => setFacility({...facility, name: e.target.value})}
-                        className='rounded-lg w-1/2'
+                        className='rounded-md w-full'
                     />
                 </label>
                 <label className='flex space-x-2 w-full'>
@@ -110,7 +122,61 @@ export default function ImageUpload(){
                         type="text" 
                         value={facility.description} 
                         onChange={e => setFacility({...facility, description: e.target.value})} 
-                        className='rounded-lg w-1/2'
+                        className='rounded-md w-full'
+                    />
+                </label>
+                <label className='flex space-x-2 w-full'>
+                    <h3>City:</h3>
+                    <input 
+                        type="text" 
+                        value={facility.city} 
+                        onChange={e => setFacility({...facility, city: e.target.value})} 
+                        className='rounded-md w-full'
+                    />
+                </label>
+                <label className='flex space-x-2 w-full'>
+                    <h3>Region:</h3>
+                    <input 
+                        type="text" 
+                        value={facility.region} 
+                        onChange={e => setFacility({...facility, region: e.target.value})} 
+                        className='rounded-md w-full'
+                    />
+                </label>
+                <label className='flex space-x-2 w-full'>
+                    <h3>Address:</h3>
+                    <input 
+                        type="text" 
+                        value={facility.address} 
+                        onChange={e => setFacility({...facility, address: e.target.value})} 
+                        className='rounded-md w-full'
+                    />
+                </label>
+                <label className='flex space-x-2 w-full'>
+                    <h3>Zipode:</h3>
+                    <input 
+                        type="number" 
+                        value={facility.postal_code} 
+                        onChange={e => setFacility({...facility, postal_code: Number(e.target.value)})} 
+                        className='rounded-md w-full'
+                    />
+                </label>
+                <label className='flex space-x-2 w-full'>
+                    <h3>Longitude:</h3>
+                    <input 
+                        type="number" 
+                        value={facility.longitude} 
+                        onChange={e => setFacility({...facility, longitude: Number(e.target.value)})} 
+                        className='rounded-md w-full'
+                    />
+                </label>
+                <label className='flex space-x-2 w-full'>
+                    <h3>Latitude:</h3>
+                    <input 
+                        type="number" 
+                        value={facility.latitude} 
+                        onChange={e => setFacility({...facility, latitude: Number(e.target.value)})} 
+                        className='rounded-md w-full'
                     />
                 </label>
                 <label className="flex space-x-2 w-full">
