@@ -1,5 +1,7 @@
 "use client"
 
+import DisplayFacilities from "@/app/_components/display_facilities";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 interface Facility {
@@ -14,17 +16,20 @@ interface Facility {
   distance: number;
 }
 
-const Matches = () => {
+const Results = () => {
   const [closestsFacilities, setClosestsFacilities] = useState<Array<Facility>>([])
+
+  const searchParams = useSearchParams()
+  const latitude = searchParams.get("latitude");
+  const longitude = searchParams.get("longitude");
 
   async function handleGetClosest(latitude: string | null, longitude: string | null){
     try {
       if (latitude && longitude) {
         const response = await fetch(`/api/closest_facility?latitude=${latitude}&longitude=${longitude}`);
         const data = await response.json();
-        setClosestsFacilities(data || []);
-      } else {
-        setClosestsFacilities([]);
+        console.log(data)
+        setClosestsFacilities(data[0] || []);
       }
     } catch (err) {
       setClosestsFacilities([]);
@@ -33,16 +38,15 @@ const Matches = () => {
   }
 
   useEffect(() => {
-    const searchParams = new URLSearchParams(window.location.search);
-      const latitude = searchParams.get("latitude");
-      const longitude = searchParams.get("longitude");
-      handleGetClosest(latitude, longitude)
-  }, []);
+    if (latitude && longitude) {
+      handleGetClosest(latitude, longitude);
+    } else setClosestsFacilities([])
+  }, [searchParams]);
   
 
   return (
     <main className="flex mt-2">
-      {closestsFacilities.length !== 0 &&
+      {closestsFacilities.length !== 0 ?
         <div className="grid grid-cols-3 gap-2 w-full rounded-lg">
           {closestsFacilities.map((item) => (
             <div key={item.facility_id} className="flex flex-col items-start bg-white p-4 rounded-lg h-full shadow-md hover:cursor-pointer hover:shadow-xl">
@@ -60,10 +64,10 @@ const Matches = () => {
               <label>{item.facility_description}</label>
             </div>
           ))}
-        </div>
+        </div> : <DisplayFacilities />
     }
     </main>
   );
 }
 
-export default Matches;
+export default Results;
