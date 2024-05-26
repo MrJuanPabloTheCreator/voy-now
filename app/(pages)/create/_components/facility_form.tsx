@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { GrAttachment } from "react-icons/gr";
 
 import { getSignedURL } from "@/server/actions";
-import FieldsDetails from "../(pages)/create/_components/fields_details";
+import FieldsDetails from "./fields_details";
 
 interface Facility {
     name: string;
@@ -23,7 +23,7 @@ interface Field {
     field_type: string;
 }
 
-export default function ImageUpload(){
+export default function FacilityForm(){
     const [facility, setFacility] = useState<Facility>({
         name: '',
         description: '',
@@ -81,10 +81,8 @@ export default function ImageUpload(){
                 const url = signedUrlResult.succes.url
                 const name = signedUrlResult.succes.name
                 const image_url = `https://voy-now-bucket.s3.amazonaws.com/${name}`
-                console.log("Running...", name)
-
-                console.log('URL from actions:', url)
-        
+                
+                // S3 Bucket Image Upload
                 const s3ImageUpload = await fetch(url, {
                     method: "PUT",
                     body: file,
@@ -92,13 +90,12 @@ export default function ImageUpload(){
                         "Content-Type": file.type,
                     },
                 })
-
                 console.log(s3ImageUpload)
 
-                console.log("facility state:", facility, "Image URL:", image_url)
+                //Form Submission
                 const facilitiesPostRequest = await fetch('/api/facilities', {
                     method: 'POST',
-                    body: JSON.stringify({facility, image_url})
+                    body: JSON.stringify({facility, image_url, fields})
                 })
                 const requestResponse = await facilitiesPostRequest.json();
                 console.log(requestResponse)
@@ -119,15 +116,15 @@ export default function ImageUpload(){
     
 
     return (
-        <div className="flex items-center justify-center p-10 bg-white/40 shadow-lg rounded-lg w-2/5 mb-10">
+        <div className="flex items-center justify-center p-10 bg-white shadow-lg rounded-lg w-2/5 mb-10">
             <form className="flex flex-col items-center space-y-5 font-semibold w-full" onSubmit={handleSubmit}>
                 <label className='flex flex-col w-full'>
-                    <h3>Name</h3>
+                    <h3>Facility Name</h3>
                     <input 
                         type="text" 
                         value={facility.name} 
                         onChange={e => setFacility({...facility, name: e.target.value})}
-                        className='rounded-md w-full'
+                        className='rounded-md w-full border-2'
                     />
                 </label>
                 <label className='flex flex-col w-full'>
@@ -136,7 +133,7 @@ export default function ImageUpload(){
                         type="text" 
                         value={facility.description} 
                         onChange={e => setFacility({...facility, description: e.target.value})} 
-                        className='rounded-md w-full'
+                        className='rounded-md w-full border-2'
                     />
                 </label>
                 <label className='flex flex-col w-full'>
@@ -145,7 +142,7 @@ export default function ImageUpload(){
                         type="text" 
                         value={facility.address} 
                         onChange={e => setFacility({...facility, address: e.target.value})} 
-                        className='rounded-md w-full'
+                        className='rounded-md w-full border-2'
                     />
                 </label>
                 <div className="flex w-full space-x-2">
@@ -155,7 +152,7 @@ export default function ImageUpload(){
                             type="text" 
                             value={facility.city} 
                             onChange={e => setFacility({...facility, city: e.target.value})} 
-                            className='rounded-md w-full'
+                            className='rounded-md w-full border-2'
                         />
                     </label>
                     <label className='flex flex-col w-[20%]'>
@@ -164,7 +161,7 @@ export default function ImageUpload(){
                             type="text" 
                             value={facility.region} 
                             onChange={e => setFacility({...facility, region: e.target.value})} 
-                            className='rounded-md w-full'
+                            className='rounded-md w-full border-2'
                         />
                     </label>
                     <label className='flex flex-col w-[30%]'>
@@ -173,7 +170,7 @@ export default function ImageUpload(){
                             type="number" 
                             value={facility.postal_code} 
                             onChange={e => setFacility({...facility, postal_code: Number(e.target.value)})} 
-                            className='rounded-md w-full'
+                            className='rounded-md w-full border-2'
                         />
                     </label>
                 </div>
@@ -184,7 +181,7 @@ export default function ImageUpload(){
                             type="number" 
                             value={facility.longitude} 
                             onChange={e => setFacility({...facility, longitude: Number(e.target.value)})} 
-                            className='rounded-md w-full'
+                            className='rounded-md w-full border-2'
                         />
                     </label>
                     <label className='flex flex-col w-[50%]'>
@@ -193,7 +190,7 @@ export default function ImageUpload(){
                             type="number" 
                             value={facility.latitude} 
                             onChange={e => setFacility({...facility, latitude: Number(e.target.value)})} 
-                            className='rounded-md w-full'
+                            className='rounded-md w-full border-2'
                         />
                     </label>
                 </div>
@@ -201,9 +198,11 @@ export default function ImageUpload(){
                     <h3>Number of Fields:</h3>
                     <input 
                         type="number" 
-                        value={numberOfFields} 
+                        value={numberOfFields || ''} 
                         onChange={e => setNumberOfFields(Number(e.target.value))} 
-                        className='rounded-md w-[50%]'
+                        className='rounded-md w-[50%] border-2'
+                        min={1}
+                        max={100}
                     />
                 </label>
                 {numberOfFields > 0 && 

@@ -1,14 +1,27 @@
 "use client"
 
 import { getGeolocation } from "@/app/utils/getUserGeolocation";
-import { Search } from "lucide-react";
+import { ChevronLeft, ChevronRight, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react"
+
+const size_options = [
+    { value: 'baby', label: 'Baby (5 vs 5)' },
+    { value: 'medium', label: 'Seven (7 vs 7)' },
+    { value: 'big', label: 'Big (9 vs 9)' },
+    { value: 'full', label: 'Full (11 vs 11)' },
+];
+
+const grass_options = [
+    { value: 'natural', label: 'Natural' },
+    { value: 'sintetic', label: 'Sintetic' },
+];
 
 interface FilterProps {
     current_location: boolean;
     size: string;
-}   
+    grass_type: string;
+}
 
 export default function DiscoverFilter(){
     const searchParamsUrl = new URLSearchParams(window.location.search);
@@ -18,7 +31,8 @@ export default function DiscoverFilter(){
     const [searchParams, setSearchParams] = useState<string>('/discover/result?')
     const [filter, setFilter] = useState<FilterProps>({
         current_location: Boolean(latitude && longitude),
-        size: 'all',
+        size: '',
+        grass_type: ''
     })
 
     const router = useRouter();
@@ -38,44 +52,88 @@ export default function DiscoverFilter(){
         await router.push(searchParams);
     }
 
-    useEffect(() => {
-        async function updateSearchParams() {
-            let params = '/discover/result?';
+    async function updateSearchParams() {
+        let params = '/discover/result?';
 
-            if(filter.current_location){
-                const coords = await handleGetClosest()
-                if (coords) {
-                    params += `latitude=${coords.latitude}&longitude=${coords.longitude}&`;
-                }
+        if(filter.current_location){
+            const coords = await handleGetClosest()
+            if (coords) {
+                params += `latitude=${coords.latitude}&longitude=${coords.longitude}&`;
             }
-            
-            setSearchParams(params.slice(0, -1));
+        }  
+        if(filter.size){
+            params += `field_size=${filter.size}&`;
+        }    
+        if(filter.grass_type){
+            params += `grass_type=${filter.grass_type}&`;
         }
+        setSearchParams(params.slice(0, -1));
+    }
 
+    useEffect(() => {
         updateSearchParams();
     }, [filter]);
     
     return (
-        <div className="bg-white w-full h-fit rounded-lg p-2 space-y-2">
+        <div className="bg-white w-full h-fit rounded-lg p-2 space-y-4">
             <h2 className="text-2xl font-semibold">Search as you like!</h2>
             <label className="flex items-center bg-slate-200 w-full rounded-full overflow-hidden space-x-2">
                 <Search size={28} className="pl-2"/>
                 <input className="w-full py-2 bg-slate-200 outline-none"/>
             </label>
-            <select id="fieldSize" name="fieldSize" className="w-full py-2 border-2 border-light_purple text-light_purple rounded-lg outline-none font-semibold">
-                <option value="baby5v5">Baby Soccer - 5 v 5</option>
-                <option value="medium7v7">Medium - 7 v 7</option>
-                <option value="big9">Big 9 - 9</option>
-                <option value="fullField9v9">Full Field - 9 v 9</option>
-            </select>
-            <div className="flex py-2 items-center w-full border-2 px-2 justify-between rounded-lg">
-                <label className="text-md font-semibold">Current Location</label>
-                <button 
-                    onClick={() => setFilter((prevFilter) => ({ ...prevFilter, current_location: !filter.current_location }))}
-                    className={`p-1 flex h-fit w-10 rounded-full transition-colors duration-300 ${filter.current_location === true ? 'bg-light_purple':'bg-slate-300'}`}>
-                    <div className={`rounded-full p-2 transform transition-transform duration-300 ${filter.current_location === true ? 'bg-light_green translate-x-4':'bg-light_green'}`}></div>
-                </button>
-            </div>
+            <label className='flex flex-col'>
+                <h3 className="font-semibold">Date</h3>
+                <div className="flex py-2 w-full justify-between border-2 rounded-lg font-semibold px-2">
+                    <button>
+                        <ChevronLeft className="text-light_purple"/>
+                    </button>
+                    Thursday, 23
+                    <button>
+                        <ChevronRight className="text-light_purple"/>
+                    </button>
+                </div>
+            </label>
+            <label className='flex flex-col'>
+                <h3 className="font-semibold">Size</h3>
+                <select 
+                    value={filter.size} 
+                    onChange={(e) => setFilter((prevFilter) => ({ ...prevFilter, size: String(e.target.value) }))} 
+                    className="rounded-md w-full border-2 py-2"
+                >
+                    <option value="">Select Size</option>
+                    {size_options.map((option) => (
+                        <option key={option.value} value={option.value}>
+                            {option.label}
+                        </option>
+                    ))}
+                </select>
+            </label>
+            <label className="flex flex-col">
+                <h3 className="font-semibold">Grass</h3>
+                <select 
+                    value={filter.grass_type} 
+                    onChange={(e) => setFilter((prevFilter) => ({ ...prevFilter, grass_type: String(e.target.value) }))} 
+                    className="rounded-md w-full border-2 py-2"
+                >
+                    <option value="">Select grass type</option>
+                    {grass_options.map((option) => (
+                        <option key={option.value} value={option.value}>
+                            {option.label}
+                        </option>
+                    ))}
+                </select>
+            </label>
+            <label className="flex flex-col">
+                <h3 className="font-semibold">Location</h3>
+                <div className="flex py-2 items-center w-full border-2 px-2 justify-between rounded-lg">
+                    <label className="text-md font-semibold">Current Location</label>
+                    <button 
+                        onClick={() => setFilter((prevFilter) => ({ ...prevFilter, current_location: !filter.current_location }))}
+                        className={`p-1 flex h-fit w-12 rounded-full transition-colors duration-300 border-2 ${filter.current_location === true ? 'bg-light_purple':''}`}>
+                        <div className={`rounded-full p-2 transform transition-transform duration-300 bg-light_green ${filter.current_location === true ? 'translate-x-5':''}`}></div>
+                    </button>
+                </div>
+            </label>
             <button onClick={() => handleSearch()} className="bg-light_green text-white font-semibold py-2 rounded-lg w-full hover:bg-green-400">
                 Search
             </button>

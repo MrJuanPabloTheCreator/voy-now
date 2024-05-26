@@ -1,10 +1,10 @@
-import ImageUpload from "@/app/_components/image_upload"
+import FacilityForm from "./_components/facility_form"
 
 const CreatePage = () => {
 
     return (
       <div className="flex justify-center mt-2 h-full">
-        <ImageUpload/>
+        <FacilityForm/>
       </div>
     )
   }

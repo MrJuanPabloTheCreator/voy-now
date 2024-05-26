@@ -20,7 +20,7 @@ const SideBarFilter: React.FC<SideBarFilterProps> = ({ active_page }) => {
     const isLinkActive = (href: string) => activePage === href;
 
     return (
-        <div className="w-full">
+        <div className="w-full shadow-lg">
             {isLinkActive('/discover/result') || isLinkActive('/discover') ? (
                     <DiscoverFilter/>
             ) : isLinkActive('/discover/people') ? (

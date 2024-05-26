@@ -25,12 +25,16 @@ const PagesLayout = ({
   }, [pathname])
 
   return (
-    <div className='flex mx-5 space-x-2'>
-      <div className='w-[30%] space-y-2'>
-        <DiscoverNavbar active_page={activePage}/>
-        <SideBarFilter active_page={activePage}/>
+    <div className='flex mx-4 space-x-4'>
+      <div className='w-[30%] pt-4'>
+        <div className='sticky top-[68px]'>
+          <SideBarFilter active_page={activePage}/>
+        </div>
       </div>
-      <main className='h-full w-[70%]'>
+      <main className='h-full w-[70%] pt-4'>
+        <div className='sticky top-[68px]'>
+          <DiscoverNavbar active_page={activePage}/>
+        </div>
         {children} 
       </main>
     </div>

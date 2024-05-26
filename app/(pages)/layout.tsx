@@ -7,7 +7,7 @@ const PagesLayout = ({
     children: React.ReactNode;
 }) => {
   return (
-    <div>
+    <div className='relative'>
       <Navbar/>
       <main className='h-full'>
         {children} 

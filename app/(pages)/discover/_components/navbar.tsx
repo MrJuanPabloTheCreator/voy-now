@@ -17,8 +17,8 @@ const DiscoverNavbar = ({ active_page }: DiscoverNavbarProps) => {
     const isLinkActive = (href: string) => activePage === href;
 
     return (
-        <div className="flex justify-center pt-2">
-            <div className="grid grid-cols-3 bg-white font-semibold text-md overflow-hidden shadow-md rounded-lg w-full">
+        <div className="flex justify-center pb-2 w-full">
+            <div className="grid grid-cols-3 bg-white font-semibold text-md overflow-hidden shadow-md rounded-full w-1/2">
                 <Link href={"/discover"} passHref>
                     <p className={`flex justify-center py-2 items-center ${isLinkActive("/discover") || isLinkActive("/discover/result")  ? "bg-light_purple text-white" : "text-black hover:bg-slate-100"}`}>
                         Soccer Fields

@@ -33,7 +33,7 @@ export default function Home() {
 
   return (
     <main className="flex mx-5 mt-2 justify-center">
-      <div className="w-[70%]">
+      <div className="w-[90%]">
         <DisplayFacilities />
       </div>
     </main>

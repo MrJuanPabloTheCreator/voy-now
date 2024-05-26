@@ -1,8 +1,9 @@
 "use client"
 
-import DisplayFacilities from "@/app/_components/display_facilities";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+
+import SkeletonCard from "../_components/skeleton_card";
 
 interface Facility {
   facility_id: number;
@@ -17,55 +18,65 @@ interface Facility {
 }
 
 const Results = () => {
-  const [closestsFacilities, setClosestsFacilities] = useState<Array<Facility>>([])
+  const [searchResultData, setSearchResultData] = useState<Array<Facility>>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const searchParams = useSearchParams()
-  const latitude = searchParams.get("latitude");
-  const longitude = searchParams.get("longitude");
+  const router = useRouter();
 
-  async function handleGetClosest(latitude: string | null, longitude: string | null){
+  const searchParams = useSearchParams();
+  const queryParams = searchParams.toString();
+
+  async function handleSearchData(){
     try {
-      if (latitude && longitude) {
-        const response = await fetch(`/api/closest_facility?latitude=${latitude}&longitude=${longitude}`);
-        const data = await response.json();
-        console.log(data)
-        setClosestsFacilities(data[0] || []);
+      setLoading(true);
+      let getResponse;
+
+      if(searchParams.size > 0){
+        getResponse = await fetch(`/api/search_facility?${queryParams}`);
+      } else {
+        getResponse = await fetch(`/api/facilities`);
       }
+
+      const data = await getResponse.json();
+      setSearchResultData(data);
+
     } catch (err) {
-      setClosestsFacilities([]);
+      setSearchResultData([]);
       console.error(err);
+
+    } finally {
+      setLoading(false);    
     }
   }
 
   useEffect(() => {
-    if (latitude && longitude) {
-      handleGetClosest(latitude, longitude);
-    } else setClosestsFacilities([])
+    handleSearchData();
   }, [searchParams]);
-  
 
   return (
-    <main className="flex mt-2">
-      {closestsFacilities.length !== 0 ?
-        <div className="grid grid-cols-3 gap-2 w-full rounded-lg">
-          {closestsFacilities.map((item) => (
-            <div key={item.facility_id} className="flex flex-col items-start bg-white p-4 rounded-lg h-full shadow-md hover:cursor-pointer hover:shadow-xl">
+    <main className="flex flex-col mt-2">
+      <div className="grid grid-cols-3 gap-4 w-full">
+        {loading ? (
+          Array.from({ length: 10 }).map(() => (
+            <SkeletonCard/>
+          ))
+        ) : (
+          searchResultData.map((item) => (
+            <div key={item.facility_id} className="flex flex-col items-start rounded-lg h-full">
               <img
                 src={item.facility_image_url}
                 alt={item.facility_name}
-                className="object-cover w-full h-48 rounded-lg"
+                className="object-cover w-full h-64 rounded-xl hover:cursor-pointer"
+                onClick={() => router.push(`/home/result?facility_id=${item.facility_id}`)}
               />
-              <h3 className="text-xl font-semibold">{item.facility_name}</h3>
-                {/* <label className="text-sm font-semibold">{`${Math.round(item.distance / 1000)}Km/${Math.round(item.distance / 1609.34)}Miles`}</label> */}
-              <div className="flex items-center justify-between w-full">
-                <label>{item.address}</label>
-                <label className="text-sm font-semibold">{`${(item.distance / 1609.34).toFixed(1)}mi`}</label>
+              <div className="flex flex-col w-full py-2">
+                <h2 className="w-fit text-md font-semibold hover:cursor-pointer hover:underline">{item.facility_name}</h2>
+                <h3 className="w-fit text-sm font-semibold text-slate-500">{item.address} - {`${(item.distance / 1609.34).toFixed(1)}mi`}</h3>
               </div>
-              <label>{item.facility_description}</label>
             </div>
-          ))}
-        </div> : <DisplayFacilities />
-    }
+          ))
+        )}
+      </div>
     </main>
   );
 }
