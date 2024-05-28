@@ -5,6 +5,25 @@ import { ChevronLeft, ChevronRight, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react"
 
+const time_options = [
+    { value: '8', label: '8:00' },
+    { value: '9', label: '9:00' },
+    { value: '10', label: '10:00' },
+    { value: '11', label: '11:00' },
+    { value: '12', label: '12:00' },
+    { value: '13', label: '13:00' },
+    { value: '14', label: '14:00' },
+    { value: '15', label: '15:00' },
+    { value: '16', label: '16:00' },
+    { value: '17', label: '17:00' },
+    { value: '18', label: '18:00' },
+    { value: '19', label: '19:00' },
+    { value: '20', label: '20:00' },
+    { value: '21', label: '21:00' },
+    { value: '22', label: '22:00' },
+    { value: '23', label: '23:00' },
+];
+
 const size_options = [
     { value: 'baby', label: 'Baby (5 vs 5)' },
     { value: 'medium', label: 'Seven (7 vs 7)' },
@@ -94,13 +113,28 @@ export default function DiscoverFilter(){
                 </div>
             </label>
             <label className='flex flex-col'>
+                <h3 className="font-semibold">Time</h3>
+                <select 
+                    value={filter.size} 
+                    onChange={(e) => setFilter((prevFilter) => ({ ...prevFilter, size: String(e.target.value) }))} 
+                    className="rounded-md w-full border-2 py-2"
+                >
+                    <option value="">All</option>
+                    {time_options.map((option) => (
+                        <option key={option.value} value={option.value}>
+                            {option.label}
+                        </option>
+                    ))}
+                </select>
+            </label>
+            <label className='flex flex-col'>
                 <h3 className="font-semibold">Size</h3>
                 <select 
                     value={filter.size} 
                     onChange={(e) => setFilter((prevFilter) => ({ ...prevFilter, size: String(e.target.value) }))} 
                     className="rounded-md w-full border-2 py-2"
                 >
-                    <option value="">Select Size</option>
+                    <option value="">All</option>
                     {size_options.map((option) => (
                         <option key={option.value} value={option.value}>
                             {option.label}
@@ -115,7 +149,7 @@ export default function DiscoverFilter(){
                     onChange={(e) => setFilter((prevFilter) => ({ ...prevFilter, grass_type: String(e.target.value) }))} 
                     className="rounded-md w-full border-2 py-2"
                 >
-                    <option value="">Select grass type</option>
+                    <option value="">All</option>
                     {grass_options.map((option) => (
                         <option key={option.value} value={option.value}>
                             {option.label}
@@ -134,7 +168,7 @@ export default function DiscoverFilter(){
                     </button>
                 </div>
             </label>
-            <button onClick={() => handleSearch()} className="bg-light_green text-white font-semibold py-2 rounded-lg w-full hover:bg-green-400">
+            <button onClick={() => handleSearch()} className="bg-light_purple text-white font-semibold py-2 rounded-lg w-full hover:bg-green-400">
                 Search
             </button>
         </div>
