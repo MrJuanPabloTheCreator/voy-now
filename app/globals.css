@@ -17,11 +17,37 @@
 html,
 body,
 :root {
-  background-color: #F0F2F5;
+  background-color: #182525;
   height: 100%;
 }
 
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #303B3B;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #5E6767;
+  /* border-radius: 10px; */
+}
+
 @layer utilities {
+  .navbar-border {
+    width: 0%;
+    transition: width 0.5s;
+  } 
+  .navbar:hover {
+    cursor: pointer;
+  }
+
+  .navbar:hover .navbar-border {
+    background-color: #6DF700;
+    width: 100%;
+  }
+
   .text-balance {
     text-wrap: balance;
   }

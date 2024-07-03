@@ -1,16 +1,17 @@
 "use client"
 
 import { useEffect, useState } from "react";
+
 import DiscoverFilter from "./_filters/discover_filter";
-import TournamentsFilter from "./_filters/touranaments_filter";
 import PeopleFilter from "./_filters/people_filter";
+import TeamsFilter from "./_filters/teams_filter";
 
 interface SideBarFilterProps {
     active_page: string;
-  }
+}
   
 const SideBarFilter: React.FC<SideBarFilterProps> = ({ active_page }) => {
-    const [activePage, setActivePage] = useState('');
+    const [activePage, setActivePage] = useState<string>('');
 
     useEffect(() => {
         console.log('active page passed:',active_page)
@@ -22,11 +23,11 @@ const SideBarFilter: React.FC<SideBarFilterProps> = ({ active_page }) => {
     return (
         <div className="w-full shadow-lg">
             {isLinkActive('/discover/result') || isLinkActive('/discover') ? (
-                    <DiscoverFilter/>
+                <DiscoverFilter/>
             ) : isLinkActive('/discover/people') ? (
-                    <PeopleFilter/>
-            ) : isLinkActive('/discover/tournaments') ? (
-                    <TournamentsFilter/>
+                <PeopleFilter/>
+            ) : isLinkActive('/discover/teams') ? (
+                <TeamsFilter/>
             ) : null}
         </div>
     );

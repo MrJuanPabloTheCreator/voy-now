@@ -1,5 +1,6 @@
 "use client"
 
+import GoogleMapComponent from "@/app/_components/google_maps";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -30,7 +31,6 @@ const FacilityPage = () => {
       const getResponse = await fetch(`/api/facilities/${facility_id}`);
       const data = await getResponse.json();
       setSearchFacilityData(data[0]);
-      console.log(data[0])
 
     } catch (err) {
       console.error(err);
@@ -44,7 +44,7 @@ const FacilityPage = () => {
     if(facility_id){
       handleSearchData();
     }
-  }, [facility_id])
+  }, [searchParams])
       
 
   return(
@@ -57,7 +57,10 @@ const FacilityPage = () => {
               <h2 className="text-lg font-semibold">{searchFacilityData.city}, Region {searchFacilityData.region}</h2>
               <p>{searchFacilityData.address}</p>
             </div>
-          </div>
+            {searchFacilityData?.geom && (
+              <GoogleMapComponent geom={searchFacilityData.geom}/>
+            )}
+          </div>      
         }
       </div>
   )

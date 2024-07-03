@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { GrAttachment } from "react-icons/gr";
 
 import { getSignedURL } from "@/server/actions";
-import FieldsDetails from "../(pages)/create/_components/fields_details";
+import FieldsDetails from "../(pages)/create/_components/facility_form/fields_details";
 
 interface Facility {
     name: string;

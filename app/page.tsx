@@ -16,13 +16,13 @@ export default function LandingPage(){
                 <div className="flex space-x-2">
                     <button 
                         className="bg-light_purple py-2 px-4 text-white text-sm font-semibold rounded-md"
-                        onClick={() => router.push('/auth/login')}
+                        onClick={() => router.push('/auth/sign-in')}
                     >
-                        Login
+                        Sign In
                     </button>
                     <button 
                         className="bg-light_purple py-2 px-4 text-white text-sm font-semibold rounded-md"
-                        onClick={() => router.push('/auth/sign_up')}
+                        onClick={() => router.push('/auth/sign-up')}
                     >
                         Sign Up
                     </button>

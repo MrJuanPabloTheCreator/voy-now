@@ -1,18 +1,20 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 const db = require('@/db')
 
-export async function GET (req: Request) {
+export async function GET (req: NextRequest) {
+    const connection = await db.getConnection();
+    console.log('USING connection in GET search_facility threadId:', connection.threadId);
+
     const { searchParams } = new URL(req.url);
     const latitude = searchParams.get('latitude');
     const longitude = searchParams.get('longitude');
     const field_size = searchParams.get('field_size');
     const grass_type = searchParams.get('grass_type');
-
-    const connection = await db.getConnection();
-    await connection.beginTransaction();
+    const ratio = searchParams.get('grass_type');
 
     try {
-        // console.log("Here Get", lat, lng)
+        await connection.beginTransaction();
+
         let query = `
             SELECT 
                 f.facility_id, 
@@ -22,7 +24,8 @@ export async function GET (req: Request) {
                 f.city, 
                 f.region, 
                 f.address, 
-                f.postal_code
+                f.postal_code,
+                f.geom
         `;
         
         const queryParams = [];
@@ -33,7 +36,7 @@ export async function GET (req: Request) {
             const lng = parseFloat(longitude);
 
             if (isNaN(lat) || isNaN(lng)) {
-                return NextResponse.json({ message: 'Invalid latitude or longitude' }, { status: 400 });
+                throw new Error('Invalid latitude and longitude')
             }
 
             query += `, ST_Distance_Sphere(f.geom, ST_GeomFromText(CONCAT('POINT(', ${lat}, ' ', ${lng}, ')'), 4326)) AS distance`;
@@ -74,7 +77,8 @@ export async function GET (req: Request) {
                 f.city, 
                 f.region, 
                 f.address, 
-                f.postal_code
+                f.postal_code,
+                f.geom
         `;
 
         if (hasLocation) {
@@ -82,17 +86,16 @@ export async function GET (req: Request) {
         }
 
         query += ` LIMIT 20`;
+        const [facilitySearchResult] = await connection.execute(query)
 
-        console.log(query)
-        const [facilitySearchResult] = await db.query(query)
         await connection.commit();
-
-        console.log("\api\closest_facility\[id]\route.ts - Transaction completed successfully 123");
         return NextResponse.json(facilitySearchResult);
+
     } catch (error) {
         await connection.rollback();
-        console.error("\api\closest_facility\[id]\route.ts - Transaction failed:", error);
+
     } finally {
+        console.log('RELEASING connection in GET search_facility threadId:', connection.threadId);
         connection.release();
     }
 }

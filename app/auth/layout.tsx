@@ -1,3 +1,4 @@
+import Image from "next/image";
 
 const AuthLayout = ({
   children
@@ -5,8 +6,13 @@ const AuthLayout = ({
   children: React.ReactNode
 }) => {
   return (
-    <div className="flex h-screen justify-center items-center">
+    <div className="flex justify-center items-center relative" style={{ backgroundImage: "url('/field_2.jpeg')", 
+      backgroundSize: 'cover', backgroundPosition: 'center', width: '100%',height: '100vh',}}
+    >
+      <div className="absolute inset-0 backdrop-blur-lg bg-black/20"/>
+      <div className="z-20">
         {children}
+      </div>
     </div>
   );
 }
