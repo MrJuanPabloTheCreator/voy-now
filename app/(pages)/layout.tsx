@@ -19,7 +19,7 @@ const PagesLayout = ({
         <main className='h-full w-full min-h-screen max-w-[1920px] pt-[52px]'>
           {children}
           <div className='fixed bottom-0 right-10 z-20'>
-            <Chat/>
+            {/* <Chat/> */}
           </div>
         </main>
       </ChatProvider>
