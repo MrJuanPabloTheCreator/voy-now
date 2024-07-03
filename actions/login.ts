@@ -8,8 +8,7 @@ interface LoginProps {
 }
 
 export const login = async (userForm: LoginProps) => {
-    console.log('responsesafds')
-    const response = await signIn("credentials", {
+    await signIn("credentials", {
         email: userForm.email,
         password: userForm.password,
         redirect: true,
