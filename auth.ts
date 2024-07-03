@@ -23,6 +23,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         try {
           const { email, password } = validatedFields.data;
           const getUserByEmail = await fetch('https://partydo.vercel.app/api/credentials', {
+          // const getUserByEmail = await fetch('http://localhost:3000/api/credentials', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -51,6 +52,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         return false;
       }
 
+      // const getUserByEmail = await fetch('http://localhost:3000/api/credentials', {
       const getUserByEmail = await fetch('https://partydo.vercel.app/api/credentials', {
         method: 'POST',
         headers: {
@@ -67,6 +69,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         user.id = existingUser.user_id;
       } else {
         //Insert user into DB using Google Info
+        // const newUser = await fetch('http://localhost:3000/home', {
         const newUser = await fetch('https://partydo.vercel.app/api/users', {
           method: 'POST',
           headers: {
@@ -104,6 +107,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return session;
     },
     async redirect(){
+      // return 'http://localhost:3000/home'
       return 'https://partydo.vercel.app/home'
     }
   },

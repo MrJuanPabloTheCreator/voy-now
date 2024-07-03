@@ -34,7 +34,8 @@ app.prepare().then(() => {
       io.to(chat_id).emit('message', { id: null, sender_id, message, created_at: createdAt });
 
       try {
-        const newMessageResponse = await fetch(`http://localhost:3000/api/chats/${chat_id}`, {
+        const newMessageResponse = await fetch(`https://partydo.vercel.app/api/chats/${chat_id}`, {
+        // const newMessageResponse = await fetch(`http://localhost:3000/api/chats/${chat_id}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

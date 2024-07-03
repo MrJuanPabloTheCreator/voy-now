@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
         const formData = await req.json();
         const { newTeam, teamLogoUrl, }: { newTeam: Team; teamLogoUrl: string | null} = formData;
 
-        const [newTeamQuery] = await connection.execute(
+        const [newTeamQuery] = await connection.query(
             `INSERT INTO teams (name, logo_url) VALUES (?, ?);`,
             [newTeam.name, teamLogoUrl]
         );
@@ -70,12 +70,12 @@ export async function POST(req: NextRequest) {
             })
 
             const insertUserTeamRelation = 'INSERT INTO user_teams (user_id, team_name, role, status) VALUES ?';
-            const [newUserTeamRelation] = await connection.execute(insertUserTeamRelation, [usersTeamValues]);
+            const [newUserTeamRelation] = await connection.query(insertUserTeamRelation, [usersTeamValues]);
 
             if(newUserTeamRelation.affectedRows > 0){
 
                 const insertUserNotificationRelation = 'INSERT INTO notifications (user_id, sender_id, type, message, team_name) VALUES ?';
-                const [newUserNotifcationRelation] = await connection.execute(insertUserNotificationRelation, [usersNotificationValues]);
+                const [newUserNotifcationRelation] = await connection.query(insertUserNotificationRelation, [usersNotificationValues]);
 
                 if(newUserNotifcationRelation.affectedRows > 0){
                     await connection.commit();

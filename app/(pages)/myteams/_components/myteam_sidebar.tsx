@@ -52,7 +52,7 @@ const MyTeamSidebar = () => {
     },[session?.user])
 
     return (
-        <div className="p-4 space-y-2 bg-black">
+        <div className="p-4 space-y-2">
             <div className="border-b-2 border-white/10">
                 <h1 className="text-lg text-white/40 font-semibold">My Profile</h1>
                 <button className="flex space-x-1 p-2 hover:bg-white/10 w-full" onClick={() => route.push(`/myteams/users/${session?.user?.id}`)}>
