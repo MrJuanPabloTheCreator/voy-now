@@ -87,7 +87,7 @@ const RivalSection = () => {
                         )}
                     </div>
                 }
-                {team_2.invited_users.map((user) => user.role === 'admin' ? (<div>{user.name}</div>):(<div></div>))}
+                {team_2.invited_users.map((user, i) => user.role === 'admin' ? (<div key={i} >{user.name}</div>):(<div key={i}></div>))}
             </div>
             <div className='w-1/2 flex flex-col'>
                 <div className='flex justify-end space-x-2 items-center'>
