@@ -77,7 +77,7 @@ export default function SignIn() {
         href={'/auth/sign-up'} 
         className='text-sm hover:underline text-white/40'
       >
-        Don't have an account?
+        Don`&apos;`t have an account?
       </Link>
     </div>
   );
